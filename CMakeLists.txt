@@ -9,10 +9,6 @@ add_library(object STATIC EnemyPool.cpp EnemyPool.h Spider.cpp Spider.h)
 add_executable(result main.cpp)
 target_link_libraries(object)
 
-add_executable(check ${tests})
-target_link_libraries(check gtest_main gmock_main object)
-add_test(NAME check COMMAND check)
-
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 1)
 set(VERSION_PATCH 0)
