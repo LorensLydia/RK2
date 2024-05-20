@@ -1,6 +1,5 @@
 #include <iostream>
 #include "Spider.h"
-#include "Spider.cpp"
 
 
 void Spider::attack() {
