@@ -1,7 +1,6 @@
 #include <string>
 #include <stdlib.h>
 #include "EnemyPool.h"
-#include "EnemyPool.cpp"
 
 void EnemyPool::create() {
 	//find dead spider
