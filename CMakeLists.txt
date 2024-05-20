@@ -1,35 +1,28 @@
-cmake_minimum_required(VERSION 3.10)
-project(ConceptualExample)
-
+cmake_minimum_required(VERSION 3.4)
+project(prototype)
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=maybe-uninitialized")
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_executable(ConceptualExample Program.cpp ConceptualExample.cpp)
+set(VERSION_MAJOR 0)
+set(VERSION_MINOR 1)
+set(VERSION_PATCH 0)
+set(VERSION_TWEAK 0)
+set(VERSION\${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}.${VERSION_TWEAK})
+set(VERSION_STRING "v${VERSION}")
 
-enable_testing()
+option(BUILD_TESTS "Build tests" OFF)
 
-include(FetchContent)
-FetchContent_Declare(
-  googletest
-  URL https://github.com/google/googletest/archive/release-1.10.0.tar.gz
-)
-FetchContent_MakeAvailable(googletest)
+add_executable(prototype prototype.cpp)
 
-add_executable(runTests tests.cpp)
+if(BUILD_TESTS)
+    enable_testing()
+    add_subdirectory(third-party/gtest)
+    file(GLOB tests "tests/*.cpp")
+    foreach(test ${tests})
+         add_executable(check ${test})
+         target_link_libraries(check gtest_main gmock_main)
+         add_test(NAME check COMMAND check)
+    endforeach(test ${tests})
+endif()
 
-target_link_libraries(runTests gtest_main)
-
-include(GoogleTest)
-gtest_discover_tests(runTests)
-
-set(EXECUTABLE_ARTIFACT "${CMAKE_BINARY_DIR}/ConceptualExample")
-
-add_custom_command(
-    TARGET ConceptualExample
-    POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    $<TARGET_FILE:ConceptualExample>
-    ${EXECUTABLE_ARTIFACT}
-    COMMENT "Copying executable to artifacts directory"
-)
+include(CPackConfig.cmake)
