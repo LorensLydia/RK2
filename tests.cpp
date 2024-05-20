@@ -21,4 +21,6 @@ TEST(SpiderTest, GetDamage) {
     spider.getDamage(20);
     EXPECT_LT(spider.hitpoints, 80.0);
 }
-
+add_executable(check ${tests})
+target_link_libraries(check gtest_main gmock_main object)
+add_test(NAME check COMMAND check)
