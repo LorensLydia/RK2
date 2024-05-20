@@ -1,6 +1,7 @@
 #include <string>
 #include <stdlib.h>
 #include "EnemyPool.h"
+#include "EnemyPool.cpp"
 
 void EnemyPool::create() {
 	//find dead spider
@@ -18,4 +19,5 @@ void EnemyPool::animate() {
 			spiders[i].attack();
 			spiders[i].getDamage(rand() % 100 + 1);
 		}
-	}}
+	}
+}
