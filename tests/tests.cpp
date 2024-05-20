@@ -1,5 +1,9 @@
 #include <iostream>
 #include "Spider.h"
+#include "Spider.cpp"
+#include "EnemyPool.h"
+#include "EnemyPool.cpp"
+
 #include <gtest/gtest.h> // Пример использования Google Test
 
 TEST(SpiderTest, InitTest) {
