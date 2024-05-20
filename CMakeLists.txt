@@ -6,9 +6,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include_directories(.)
 add_library(object STATIC EnemyPool.cpp EnemyPool.h Spider.cpp Spider.h)
 
-add_executable(result main.cpp)
-target_link_libraries(object)
-
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 1)
 set(VERSION_PATCH 0)
@@ -19,6 +16,7 @@ set(VERSION_STRING "v${VERSION}")
 option(BUILD_TESTS "Build tests" OFF)
 
 add_executable(Object_Pool_Design_Pattern main.cpp)
+target_link_libraries(object)
 
 if(BUILD_TESTS)
     enable_testing()
