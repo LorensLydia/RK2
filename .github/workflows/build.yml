@@ -1,17 +1,36 @@
-name: Build  CMake 
+name: CMake
 
-on:
-  push:
-    branches: [ "main" ]
+on: [push, pull_request]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-    - name: build
+    - name: Set up CMake
+      uses: jwlawson/actions-setup-cmake@v1
+
+    - name: Install dependencies
+      run: sudo apt-get install -y cmake g++ libgtest-dev
+
+    - name: Build
       run: |
-        cmake -H. -B_build
-        cmake --build _build
+        mkdir -p build
+        cd build
+        cmake .. -DBUILD_TESTS=ON
+        make
+
+    - name: Run tests
+      run: |
+        cd build
+        ctest --output-on-failure
+      continue-on-error: true
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: build-artifacts
+        path: build/
