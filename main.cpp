@@ -1,8 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include "Spider.cpp"
+#include "EnemyPool.cpp"
 #include <iostream>
 #include "EnemyPool.h"
+#include "Spider.h>
 
 int Spider::created = 0;
 
