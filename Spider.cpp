@@ -1,5 +1,7 @@
 #include <iostream>
 #include "Spider.h"
+#include "Spider.cpp"
+
 
 void Spider::attack() {
 	std::cout << this->name << this->counter << " hits Player with " << this->damage <<" damage." << std::endl;
