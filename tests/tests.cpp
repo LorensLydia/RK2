@@ -1,48 +1,57 @@
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
 #include <iostream>
-#include "Spider.h"
-#include "Spider.cpp"
-#include "EnemyPool.h"
-#include "EnemyPool.cpp"
+#include <sstream>
 
-#include <gtest/gtest.h> // Пример использования Google Test
+class Prototype{
+public:
+	virtual ~Prototype(){}
+	virtual Prototype* Clone() = 0;
+protected:
+	Prototype(){}
+};
+class ConcretePrototype:public Prototype{
+public:
+	ConcretePrototype(){}
+	ConcretePrototype(const ConcretePrototype& cp){
+		*this = cp;
+		std::cout<<"ConcretePrototype copy ..."<<std::endl;
+	}
+	~ConcretePrototype(){}
+	virtual Prototype* Clone() {
+		return new ConcretePrototype(*this);
+	}
+};
+class PrototypeMock: public Prototype {
+public:
+    ~PrototypeMock() override = default;
+    MOCK_METHOD0(Clone, Prototype*());
+};
 
-TEST(SpiderTest, InitTest) {
-    Spider spider;
-    spider.init("Black Widow", 100.0, 10.0);
-    EXPECT_EQ(spider.isAlive(), true);
+TEST(Prototype_tests, test1) {
+    PrototypeMock p_mock;
+    EXPECT_CALL(p_mock, Clone()).Times(1);
+    Prototype* p1 = p_mock.Clone();
 }
 
-TEST(SpiderTest, AttackTest) {
-    Spider spider;
-    spider.init("Tarantula", 80.0, 15.0);
-    testing::internal::CaptureStdout();
-    spider.attack();
-    std::string output = testing::internal::GetCapturedStdout();
-    EXPECT_EQ(output, "Tarantula1 hits Player with 15 damage.\n");
+TEST(Prototype_tests, test2) {
+    PrototypeMock p_mock;
+    EXPECT_CALL(p_mock, Clone()).Times(1);
+    Prototype* p1 = p_mock.Clone();
+    PrototypeMock p1_mock;
+    EXPECT_CALL(p1_mock, Clone()).Times(1);
+    Prototype* p2 = p1_mock.Clone();
 }
 
-TEST(SpiderTest, GetDamageTest) {
-    Spider spider;
-    spider.init("Jumping Spider", 50.0, 20.0);
-    testing::internal::CaptureStdout();
-    spider.getDamage(25);
-    std::string output = testing::internal::GetCapturedStdout();
-    EXPECT_EQ(output, "Jumping Spider1 gets 25 damage.\n");
-    EXPECT_EQ(spider.isAlive(), true);
-}
+TEST(Prototype_tests, test3) {
+    std::ostringstream oss;
+    std::streambuf* cout_streambuf = std::cout.rdbuf();
+    std::cout.rdbuf(oss.rdbuf());
 
-TEST(SpiderTest, DeathTest) {
-    Spider spider;
-    spider.init("Wolf Spider", 30.0, 5.0);
-    testing::internal::CaptureStdout();
-    spider.getDamage(35);
-    std::string output = testing::internal::GetCapturedStdout();
-    EXPECT_EQ(output, "Wolf Spider1 gets 35 damage.\nWolf Spider1 dies\n");
-    EXPECT_EQ(spider.isAlive(), false);
-}
+    Prototype* p = new ConcretePrototype();
+    Prototype* p1 = p->Clone();
 
-int main(int argc, char **argv) {
-    testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+    std::cout.rdbuf(cout_streambuf);
+    EXPECT_EQ(oss.str(), "ConcretePrototype copy ...\n");
 }
 
