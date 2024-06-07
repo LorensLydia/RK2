@@ -25,7 +25,6 @@ jobs:
           dir
           tree _build
           mkdir artifacts
-          copy _build/Release/Cpp-Software-Design.exe artifacts
           mv _build artifacts
       
       - name: Archive artifacts
