@@ -28,7 +28,7 @@ FetchContent_MakeAvailable(googletest)
 
 # Добавляем тестируемый исполняемый файл
 add_executable(Object Pool Design PatternTests
-    tests/dip_test.cpp
+    tests/tests.cpp
 )
 
 # Линкуем библиотеки Google Test
