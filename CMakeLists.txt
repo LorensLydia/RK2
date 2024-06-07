@@ -12,7 +12,7 @@ add_library(SOLIDLib SHARED
 
 
 add_executable(SOLIDProject
-    Program.cpp
+    main.cpp
 )
 
 target_link_libraries(Object Pool Design PatternProject PRIVATE Object Pool Design PatternLib)
@@ -34,7 +34,7 @@ add_executable(Object Pool Design PatternTests
 # Линкуем библиотеки Google Test
 target_link_libraries(Object Pool Design PatternTests
     PRIVATE
-    SOLIDLib
+    Object Pool Design PatternLib
     gtest
     gtest_main
 )
