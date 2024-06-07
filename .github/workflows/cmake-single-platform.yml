@@ -1,11 +1,40 @@
-name: CMake on a single platform
+name: Build
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+         
+      - name: Configure CMake
+        run: cmake -B_build
+        
+      - name: Build project
+        run: |
+          cmake --build _build --config Release
+          dir
+          tree _build
+          mkdir artifacts
+          copy _build/Release/Cpp-Software-Design.exe artifacts
+          mv _build artifacts
+      
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifacts
+          path: artifacts
+        
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,15 +48,5 @@ jobs:
         cd third-party/gtest && git checkout release-1.11.0 && cd ../..
         cmake -H. -B_build -DBUILD_TESTS=ON
         cmake --build _build
-        mv _build/result artifacts
-
     - name: Tests
-      run: |
-        _build/check
-
-    - name: Archive artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: artifacts
-        path: |
-          artifacts
+      run:  _build/check
