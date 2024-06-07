@@ -1,32 +1,43 @@
-cmake_minimum_required(VERSION 3.4)
-project(Object_Pool_Design_Pattern)
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+cmake_minimum_required(VERSION 3.10)
 
-include_directories(.)
-add_library(object STATIC EnemyPool.cpp EnemyPool.h Spider.cpp Spider.h)
+project(SOLID)
 
-set(VERSION_MAJOR 0)
-set(VERSION_MINOR 1)
-set(VERSION_PATCH 0)
-set(VERSION_TWEAK 0)
-set(VERSION\${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}.${VERSION_TWEAK})
-set(VERSION_STRING "v${VERSION}")
+# Добавляем основные файлы проекта
+add_library(SOLIDLib SHARED
+    Spider.cpp
+    EnemyPool.cpp
+    Spider.h
+    EnemyPool.h
+    )
 
-option(BUILD_TESTS "Build tests" OFF)
 
-add_executable(Object_Pool_Design_Pattern main.cpp)
-target_link_libraries(object)
+add_executable(SOLIDProject
+    Program.cpp
+)
 
-if(BUILD_TESTS)
-    enable_testing()
-    add_subdirectory(third-party/gtest)
-    file(GLOB tests "tests/*.cpp")
-    foreach(test ${tests})
-         add_executable(check ${test})
-         target_link_libraries(check gtest_main gmock_main object)
-         add_test(NAME check COMMAND check)
-    endforeach(test ${tests})
-endif()
+target_link_libraries(Object Pool Design PatternProject PRIVATE Object Pool Design PatternLib)
 
-include(CPackConfig.cmake)
+# Добавляем Google Test с использованием FetchContent
+include(FetchContent)
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/release-1.11.0.zip
+)
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+
+# Добавляем тестируемый исполняемый файл
+add_executable(Object Pool Design PatternTests
+    tests/dip_test.cpp
+)
+
+# Линкуем библиотеки Google Test
+target_link_libraries(Object Pool Design PatternTests
+    PRIVATE
+    SOLIDLib
+    gtest
+    gtest_main
+)
+
+enable_testing()
+add_test(NAME Object Pool Design PatternTests COMMAND Object Pool Design PatternTests)
